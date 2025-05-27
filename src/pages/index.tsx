@@ -7,6 +7,7 @@ import { useChatbot } from '@/hooks/useChatbot';
 import { ChatMessage } from '@/components/ChatMessage';
 import { ConversationHistory } from '@/components/ConversationHistory';
 import { ChatInput } from '@/components/ChatInput';
+import { useMongo  } from '@/hooks/useMongo';
 
 export default function ParadiseChatbot() {
   const {
@@ -17,12 +18,14 @@ export default function ParadiseChatbot() {
     processUserResponse
   } = useChatbot();
 
+  const { handleDone } = useMongo();
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   // Initialize conversation on mount
   useEffect(() => {
     startNewConversation();
-  }, [startNewConversation]);
+  }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -42,6 +45,15 @@ export default function ParadiseChatbot() {
             <MessageCircle className="h-6 w-6 text-blue-600" />
             <CardTitle>Small Paradise - Assistant Bien-être</CardTitle>
           </div>
+          <div>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => handleDone(conversationHistory)}
+              className="flex items-center space-x-1"
+            >
+              <span>Doned</span>
+            </Button>
           <Button 
             size="sm" 
             onClick={startNewConversation}
@@ -50,6 +62,7 @@ export default function ParadiseChatbot() {
             <RotateCcw className="h-4 w-4" />
             <span>Reset</span>
           </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <ScrollArea className="h-96 w-full border rounded-lg p-4" ref={scrollAreaRef}>
